@@ -11,6 +11,12 @@ import {
 
 // componentes de terceros
 import '@polymer/polymer/lib/elements/dom-repeat';
+import '@polymer/paper-styles/typography.js';
+import '@polymer/paper-styles/shadow.js';
+import '@vaadin/vaadin-icons/vaadin-icons.js';
+import '@polymer/paper-icon-button';
+import '@vaadin/vaadin-button/vaadin-button.js';
+
 
 // mis componentes
 import './todo-item';
@@ -22,31 +28,76 @@ import './todo-item';
 class ReduxDemoApp extends connect(store)(PolymerElement) {
   static get template() {
     return html`
-      <style>
+      <style is="custom-style">
         :host {
           display: block;
+          --main-color: #8cf;
+          @apply --paper-font-common-base;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 95vh;
+        }
+        input {
+          padding: 5px;
+          border-radius: 5px;
+          border: 1px solid var(--main-color);
+        }
+        paper-icon-button {
+          color: var(--main-color);
+        }
+        .sin-todos {
+          padding: 10px 15px;
+          margin: 15px 0;
+          background-color: #eee;
+          color: #966;
+          border: 1px solid #edd;
+          border-radius: 3px;
+          font-size: 0.85em;
+        }
+        h1 {
+          @apply --paper-font-headline;
+        }
+        .filter a {
+          display: inline-block;
+          margin-left: 10px;
+          color: var(--main-color);
+          text-decoration: none;
+        }
+        .filter span {
+          text-transform: uppercase;
+        }
+        .container {
+          padding: 15px;
+          @apply --shadow-elevation-2dp;
         }
       </style>
-      <h2>Todo list</h2>
-      <template is="dom-repeat" items="[[_todos]]">
-        <todo-item 
-          todo="[[item]]" 
-          index="[[index]]"
-          on-cambia-estado="cambiaEstadoTodo"
-        ></todo-item>
-      </template>
-      <p>
-        Texto de la acción: <input type="text" id="actionText">
-      </p>
-      <p>
-        <button on-click="addTodo">Añadir esa tarea</button>
-        <button on-click="mostrarStore">mostrar store</button>
-        <br>
-        <button on-click="verTodos">Ver todas las todo</button>
-        <button on-click="verNoCompletados">Ver NO completadas</button>
-        <button on-click="verCompletados">Ver completadas</button>
+      <div class="container">
+        <h1>Todo list</h1>
+        <template is="dom-repeat" items="[[_todos]]">
+          <todo-item 
+            todo="[[item]]" 
+            index="[[index]]"
+            on-cambia-estado="cambiaEstadoTodo"
+          ></todo-item>
+        </template>
+        <template is="dom-if" if="[[!_todos.length]]">
+          <p class="sin-todos">No tengo todos</p>
+        </template>
+        <p>
+          Nueva acción: <input type="text" id="actionText" on-keypress="escrito"> 
+          <paper-icon-button icon="vaadin:arrow-circle-right-o" on-click="addTodo"></paper-icon-button>
+        </p>
+        <p class="filter">
+          <span>Filtro:</span> <a href="#" on-click="verTodos">Ver todas</a>
+          <a href="#" on-click="verNoCompletados">Ver NO completadas</a>
+          <a href="#" on-click="verCompletados">Ver completadas</a>
 
-      </p>
+        </p>
+        <p>
+          <vaadin-button on-click="mostrarStore">Log store en consola</vaadin-button>
+        </p>
+      </div>
     `;
   }
   static get properties() {
@@ -62,11 +113,18 @@ class ReduxDemoApp extends connect(store)(PolymerElement) {
     };
   }
 
+  escrito(e) {
+    if(e.code == "Enter") {
+      this.addTodo();
+    }
+
+  }
   addTodo() {
     let tarea = this.$.actionText.value;
     console.log('añado tarea ', tarea);
     store.dispatch(addTodo(tarea));
     this.$.actionText.value = '';
+    this.$.actionText.focus();
   }
 
   cambiaEstadoTodo(e) {
@@ -78,15 +136,18 @@ class ReduxDemoApp extends connect(store)(PolymerElement) {
     console.log(store.getState());
   }
 
-  verTodos() {
+  verTodos(e) {
+    e.preventDefault();
     store.dispatch(setVisibilityFilter(VisibilityFilters.SHOW_ALL));
   }
 
-  verNoCompletados() {
+  verNoCompletados(e) {
+    e.preventDefault();
     store.dispatch(setVisibilityFilter(VisibilityFilters.SHOW_ACTIVE));
   }
 
-  verCompletados() {
+  verCompletados(e) {
+    e.preventDefault();
     store.dispatch(setVisibilityFilter(VisibilityFilters.SHOW_COMPLETED));
   }
 

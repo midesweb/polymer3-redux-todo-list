@@ -1,5 +1,6 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@vaadin/vaadin-checkbox/vaadin-checkbox.js';
+import '@vaadin/vaadin-item/vaadin-item.js';
 
 /**
  * `todo-item` Description
@@ -28,11 +29,11 @@ class TodoItem extends PolymerElement {
           display: inline-block;
         }
       </style>
-      <div on-click="cambiarEstado">
+      <vaadin-item on-click="cambiarEstado">
         <vaadin-checkbox checked="[[todo.completed]]">
           [[todo.id]]: [[todo.text]]
         </vaadin-checkbox>
-      </div>
+      </vaadin-item>
     `;
   }
 
