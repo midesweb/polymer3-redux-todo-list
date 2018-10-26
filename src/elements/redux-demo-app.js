@@ -121,14 +121,14 @@ class ReduxDemoApp extends connect(store)(PolymerElement) {
   }
   addTodo() {
     let tarea = this.$.actionText.value;
-    console.log('añado tarea ', tarea);
+    //console.log('añado tarea ', tarea);
     store.dispatch(addTodo(tarea));
     this.$.actionText.value = '';
     this.$.actionText.focus();
   }
 
   cambiaEstadoTodo(e) {
-    console.log('en redux demo' ,e.detail);
+    //console.log('en redux demo' ,e.detail);
     store.dispatch(toggleTodo(e.detail.id))
   }
 
@@ -152,7 +152,7 @@ class ReduxDemoApp extends connect(store)(PolymerElement) {
   }
 
   stateChanged(state) {
-    console.log('stateChanged', state);
+    //console.log('stateChanged', state);
     this._filter = state.todoApp.visibilityFilter;
     this._todos = state.todoApp.todos.filter(this.filtradoTodos.bind(this))
   }

@@ -38,17 +38,13 @@ class TodoItem extends PolymerElement {
   }
 
   cambiarEstado() {
-    console.log('cambiar estado en todo-item', this.index)
+    //console.log('cambiar estado en todo-item', this.index)
     this.dispatchEvent(new CustomEvent('cambia-estado', {
       detail: {
         id: this.todo.id
       }
     }));
   }
-
-  // todoObserver(todo) {
-  //   console.log('todoObserver', todo);
-  // }
 }
 
 customElements.define('todo-item', TodoItem);
