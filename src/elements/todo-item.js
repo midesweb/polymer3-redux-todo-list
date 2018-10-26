@@ -15,6 +15,10 @@ class TodoItem extends PolymerElement {
     return {
       todo: {
         type: Object
+      },
+      itemClass: {
+        type: String,
+        computed: 'itemClassCompute(todo)'
       }
     }
   }
@@ -28,10 +32,13 @@ class TodoItem extends PolymerElement {
         div {
           display: inline-block;
         }
+        .completed {
+          text-decoration: line-through;
+        }
       </style>
       <vaadin-item on-click="cambiarEstado">
         <vaadin-checkbox checked="[[todo.completed]]">
-          [[todo.id]]: [[todo.text]]
+          [[todo.id]]: <span class$="[[itemClass]]">[[todo.text]]</span>
         </vaadin-checkbox>
       </vaadin-item>
     `;
@@ -40,10 +47,19 @@ class TodoItem extends PolymerElement {
   cambiarEstado() {
     //console.log('cambiar estado en todo-item', this.index)
     this.dispatchEvent(new CustomEvent('cambia-estado', {
+      bubbles: true,
+      composed: true,
       detail: {
         id: this.todo.id
       }
     }));
+  }
+
+  itemClassCompute(todo) {
+    if(todo.completed) {
+      return 'completed';
+    }
+    return '';
   }
 }
 

@@ -19,6 +19,7 @@ import '@vaadin/vaadin-button/vaadin-button.js';
 
 
 // mis componentes
+import './todo-list';
 import './todo-item';
 
 /**
@@ -46,15 +47,7 @@ class ReduxDemoApp extends connect(store)(PolymerElement) {
         paper-icon-button {
           color: var(--main-color);
         }
-        .sin-todos {
-          padding: 10px 15px;
-          margin: 15px 0;
-          background-color: #eee;
-          color: #966;
-          border: 1px solid #edd;
-          border-radius: 3px;
-          font-size: 0.85em;
-        }
+        
         h1 {
           @apply --paper-font-headline;
         }
@@ -74,16 +67,10 @@ class ReduxDemoApp extends connect(store)(PolymerElement) {
       </style>
       <div class="container">
         <h1>Todo list</h1>
-        <template is="dom-repeat" items="[[_todos]]">
-          <todo-item 
-            todo="[[item]]" 
-            index="[[index]]"
-            on-cambia-estado="cambiaEstadoTodo"
-          ></todo-item>
-        </template>
-        <template is="dom-if" if="[[!_todos.length]]">
-          <p class="sin-todos">No tengo todos</p>
-        </template>
+        <todo-list 
+          todos="[[_todos]]"
+          on-cambia-estado="cambiaEstadoTodo"
+        ></todo-list>
         <p>
           Nueva acción: <input type="text" id="actionText" on-keypress="escrito"> 
           <paper-icon-button icon="vaadin:arrow-circle-right-o" on-click="addTodo"></paper-icon-button>
