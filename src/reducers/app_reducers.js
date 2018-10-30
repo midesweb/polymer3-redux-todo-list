@@ -1,11 +1,26 @@
 import { combineReducers } from 'redux'
 
 import {
+  UPDATE_PAGE,
   ADD_TODO,
   TOGGLE_TODO,
   SET_VISIBILITY_FILTER
 } from '../actions/app_actions.js';
 
+/*
+* Reducer para la navegación
+*/
+function navigation(state = '', action) {
+  switch(action.type) {
+    case UPDATE_PAGE:
+      return {
+        ...state,
+        page: action.page
+      }
+    default:
+      return state
+  }
+} 
 
 /*
 * Reducer para las TODO
@@ -56,6 +71,7 @@ function visibilityFilter(state = 'SHOW_ALL', action) {
 //Eso mismo se consigue con combineReducers
 
 export const todoApp = combineReducers({
+  navigation,
   visibilityFilter,
   todos
 })

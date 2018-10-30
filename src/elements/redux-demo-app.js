@@ -1,8 +1,10 @@
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
+import { installRouter } from 'pwa-helpers/router.js';
 
 import { store } from '../store';
 import { 
+  navigate,
   addTodo, 
   toggleTodo,
   setVisibilityFilter,
@@ -12,15 +14,18 @@ import {
 // componentes de terceros
 import '@polymer/polymer/lib/elements/dom-repeat';
 import '@polymer/paper-styles/typography.js';
-import '@polymer/paper-styles/shadow.js';
-import '@vaadin/vaadin-icons/vaadin-icons.js';
 import '@polymer/paper-icon-button';
+import '@polymer/paper-styles/shadow.js';
+import '@polymer/iron-pages/iron-pages.js';
+
+import '@vaadin/vaadin-icons/vaadin-icons.js';
 import '@vaadin/vaadin-button/vaadin-button.js';
 
 
 // mis componentes
 import './todo-list';
 import './todo-item';
+import './todo-stats';
 
 /**
  * @customElement
@@ -66,21 +71,35 @@ class ReduxDemoApp extends connect(store)(PolymerElement) {
         }
       </style>
       <div class="container">
+        <nav>
+          <a href="/">TODOS</a> | 
+          <a href="/estadisticas">Estadísticas</a> | 
+          <a href="/contador">Contador</a>
+        </nav>
         <h1>Todo list</h1>
-        <todo-list 
-          todos="[[_todos]]"
-          on-cambia-estado="cambiaEstadoTodo"
-        ></todo-list>
-        <p>
-          Nueva acción: <input type="text" id="actionText" on-keypress="escrito"> 
-          <paper-icon-button icon="vaadin:arrow-circle-right-o" on-click="addTodo"></paper-icon-button>
-        </p>
-        <p class="filter">
-          <span>Filtro:</span> <a href="#" on-click="verTodos">Ver todas</a>
-          <a href="#" on-click="verNoCompletados">Ver NO completadas</a>
-          <a href="#" on-click="verCompletados">Ver completadas</a>
-
-        </p>
+        <iron-pages selected="[[_page]]" attr-for-selected="page-name">
+          <div page-name="/">
+            <todo-list 
+              todos="[[_todos]]"
+              on-cambia-estado="cambiaEstadoTodo"
+            ></todo-list>
+            <p>
+              Nueva acción: <input type="text" id="actionText" on-keypress="escrito"> 
+              <paper-icon-button icon="vaadin:arrow-circle-right-o" on-click="addTodo"></paper-icon-button>
+            </p>
+            <p class="filter">
+              <span>Filtro:</span> <a href="#" on-click="verTodos">Ver todas</a>
+              <a href="#" on-click="verNoCompletados">Ver NO completadas</a>
+              <a href="#" on-click="verCompletados">Ver completadas</a>
+            </p>
+          </div>
+          <div page-name="/estadisticas">
+            <todo-stats todos="[[_todos]]"></todo-stats>
+          </div>
+          <div page-name="/contador">
+            <click-counter></click-counter>
+          </div>
+        </iron-pages>
         <p>
           <vaadin-button on-click="mostrarStore">Log store en consola</vaadin-button>
         </p>
@@ -98,6 +117,16 @@ class ReduxDemoApp extends connect(store)(PolymerElement) {
         value: function() { return [] }
       }
     };
+  }
+
+  ready() {
+    super.ready();
+    installRouter((location) => this._locationChanged(location));
+  }
+
+  _locationChanged(location) {
+    console.log(location);
+    store.dispatch(navigate(location.pathname))
   }
 
   escrito(e) {
@@ -140,8 +169,9 @@ class ReduxDemoApp extends connect(store)(PolymerElement) {
 
   stateChanged(state) {
     //console.log('stateChanged', state);
-    this._filter = state.todoApp.visibilityFilter;
+    this._filter = state.todoApp.visibilityFilter
     this._todos = state.todoApp.todos.filter(this.filtradoTodos.bind(this))
+    this._page = state.todoApp.navigation.page
   }
 
   filtradoTodos(item) {

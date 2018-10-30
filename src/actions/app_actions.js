@@ -2,6 +2,7 @@
 * Action types
 */
 
+export const UPDATE_PAGE = 'UPDATE_PAGE';
 export const ADD_TODO = 'ADD_TODO';
 export const TOGGLE_TODO = 'TOGGLE_TODO';
 export const SET_VISIBILITY_FILTER = 'SET_VISIBILITY_FILTER';
@@ -19,6 +20,13 @@ export const VisibilityFilters = {
 /*
 * Action creators
 */
+
+export function navigate(path) {
+  return {
+    type: UPDATE_PAGE,
+    page: path
+  }
+} 
 
 export function addTodo(text) {
   return {
