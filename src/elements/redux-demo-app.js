@@ -17,6 +17,7 @@ import '@polymer/paper-styles/typography.js';
 import '@polymer/paper-icon-button';
 import '@polymer/paper-styles/shadow.js';
 import '@polymer/iron-pages/iron-pages.js';
+import '@polymer/iron-icons/iron-icons.js';
 
 import '@vaadin/vaadin-icons/vaadin-icons.js';
 import '@vaadin/vaadin-button/vaadin-button.js';
@@ -25,7 +26,7 @@ import '@vaadin/vaadin-button/vaadin-button.js';
 // mis componentes
 import './todo-list';
 import './todo-item';
-import './todo-stats';
+// import './todo-stats'; ELEMENTO LAZY LOAD!!
 
 /**
  * @customElement
@@ -75,10 +76,11 @@ class ReduxDemoApp extends connect(store)(PolymerElement) {
           <a href="/">TODOS</a> | 
           <a href="/estadisticas">Estadísticas</a> | 
           <a href="/contador">Contador</a>
+          <a href="/view2">Contador traído</a>
         </nav>
         <h1>Todo list</h1>
         <iron-pages selected="[[_page]]" attr-for-selected="page-name">
-          <div page-name="/">
+          <div page-name="todo-home">
             <todo-list 
               todos="[[_todos]]"
               on-cambia-estado="cambiaEstadoTodo"
@@ -93,12 +95,18 @@ class ReduxDemoApp extends connect(store)(PolymerElement) {
               <a href="#" on-click="verCompletados">Ver completadas</a>
             </p>
           </div>
-          <div page-name="/estadisticas">
+          <div page-name="estadisticas">
             <todo-stats todos="[[_todos]]"></todo-stats>
           </div>
-          <div page-name="/contador">
+          <div page-name="contador">
             <click-counter></click-counter>
           </div>
+          <div page-name="view2" active>
+          hohoh
+          <my-view2></my-view2>
+          </div>
+          <error-404 page-name="view404">
+          </error-404>
         </iron-pages>
         <p>
           <vaadin-button on-click="mostrarStore">Log store en consola</vaadin-button>
@@ -168,7 +176,7 @@ class ReduxDemoApp extends connect(store)(PolymerElement) {
   }
 
   stateChanged(state) {
-    //console.log('stateChanged', state);
+    console.log('stateChanged home', state);
     this._filter = state.todoApp.visibilityFilter
     this._todos = state.todoApp.todos.filter(this.filtradoTodos.bind(this))
     this._page = state.todoApp.navigation.page

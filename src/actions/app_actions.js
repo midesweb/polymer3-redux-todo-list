@@ -22,9 +22,26 @@ export const VisibilityFilters = {
 */
 
 export function navigate(path) {
+  let page = path === '/' ? 'todo-home' : path.slice(1);
+  switch(page) {
+    case 'todo-home':
+      break;
+    case 'estadisticas':
+      import('../elements/todo-stats.js');
+      break;
+    case 'contador':
+      import('../elements/click-counter.js');
+      break;
+    case 'view2':
+      import('../elements/my-view2.js');
+      break;
+    default:
+      page = 'view404';
+      import('../elements/error-404.js');
+  }
   return {
     type: UPDATE_PAGE,
-    page: path
+    page: page
   }
 } 
 

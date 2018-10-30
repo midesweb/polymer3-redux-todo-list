@@ -1,4 +1,17 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
+
+import { store } from '../store.js';
+
+import {
+  increaseCounter,
+  decreaseCounter
+} from '../actions/counter_actions';
+
+import counterReducer from '../reducers/counter_reducers';
+store.addReducers({
+  counter: counterReducer
+});
 
 /**
  * `click-counter` Description
@@ -8,10 +21,10 @@ import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
  * @demo
  * 
  */
-class ClickCounter extends PolymerElement {
+class ClickCounter extends connect(store)(PolymerElement) {
   static get properties() {
     return {
-      counter: {
+      _counter: {
         type: Number,
       }
     }
@@ -19,25 +32,25 @@ class ClickCounter extends PolymerElement {
 
   static get template() {
     return html`
-      <h1>[[counter]]</h1>
+      <h1>[[_counter]]</h1>
+      <p>
+        <vaadin-button on-click="incrementar">Incrementar</vaadin-button>
+        <vaadin-button on-click="decrementar">Decrementar</vaadin-button>
+      </p>
     `;
   }
 
-  /**
-   * Instance of the element is created/upgraded. Use: initializing state,
-   * set up event listeners, create shadow dom.
-   * @constructor
-   */
-  constructor() {
-    super();
+
+  stateChanged(state) {
+    console.log('stateChanged click-counter', state);
+    this._counter = state.counter.value;
   }
 
-  /**
-   * Use for one-time configuration of your component after local
-   * DOM is initialized.
-   */
-  ready() {
-    super.ready();
+  incrementar() {
+    store.dispatch(increaseCounter());
+  }
+  decrementar() {
+    store.dispatch(decreaseCounter());
   }
 }
 
