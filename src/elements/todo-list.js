@@ -27,7 +27,12 @@ class TodoList extends PolymerElement {
       border-radius: 3px;
       font-size: 0.85em;
     }
+    h1 {
+      @apply --paper-font-headline;
+    }
     </style>
+    <h1>Todo list</h1>
+
     <template is="dom-repeat" items="[[todos]]">
       <todo-item 
         todo="[[item]]" 

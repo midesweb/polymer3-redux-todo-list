@@ -3,7 +3,7 @@
 import { lazyReducerEnhancer } from 'pwa-helpers/lazy-reducer-enhancer.js';
 import { todoApp } from './reducers/app_reducers.js'
 import { createStore, compose, combineReducers, applyMiddleware } from 'redux'
-//import thunk from 'redux-thunk';
+import thunk from 'redux-thunk';
 
 
 // Sets up a Chrome extension for time travel debugging.
@@ -14,7 +14,7 @@ export const store = createStore(
   state => state,
   devCompose(
     lazyReducerEnhancer(combineReducers),
-    //applyMiddleware(thunk)
+    applyMiddleware(thunk)
   )
 );
 

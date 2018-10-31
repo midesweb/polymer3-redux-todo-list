@@ -35,6 +35,12 @@ export function navigate(path) {
     case 'view2':
       import('../elements/my-view2.js');
       break;
+    case 'link':
+      import('../elements/imperative-link.js');
+      break;
+    case 'posts':
+      import('../elements/post-list.js');
+      break;
     default:
       page = 'view404';
       import('../elements/error-404.js');

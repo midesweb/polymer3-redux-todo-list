@@ -55,9 +55,7 @@ class ReduxDemoApp extends connect(store)(PolymerElement) {
           color: var(--main-color);
         }
         
-        h1 {
-          @apply --paper-font-headline;
-        }
+        
         .filter a {
           display: inline-block;
           margin-left: 10px;
@@ -82,10 +80,11 @@ class ReduxDemoApp extends connect(store)(PolymerElement) {
         <iron-selector selected="[[_page]]" attr-for-selected="page-name">
           <a href="/" page-name="todo-home">Todos</a> | 
           <a href="/estadisticas" page-name="estadisticas">Estadísticas</a> | 
-          <a href="/contador" page-name="contador">Contador</a>
+          <a href="/contador" page-name="contador">Contador</a> | 
+          <a href="/link" page-name="link">Link imperativo</a> | 
+          <a href="/posts" page-name="posts">Posts</a>
         </iron-selector>
         </nav>
-        <h1>Todo list</h1>
         <iron-pages selected="[[_page]]" attr-for-selected="page-name">
           <div page-name="todo-home">
             <todo-list 
@@ -109,9 +108,10 @@ class ReduxDemoApp extends connect(store)(PolymerElement) {
             <click-counter></click-counter>
           </div>
           <div page-name="view2" active>
-          hohoh
-          <my-view2></my-view2>
+            <my-view2></my-view2>
           </div>
+          <imperative-link page-name="link"></imperative-link>
+          <post-list page-name="posts"></post-list>
           <error-404 page-name="view404">
           </error-404>
         </iron-pages>
@@ -137,6 +137,11 @@ class ReduxDemoApp extends connect(store)(PolymerElement) {
   ready() {
     super.ready();
     installRouter((location) => this._locationChanged(location));
+    this.addEventListener('navigate', function(e) {
+      this._locationChanged({
+        pathname: e.detail.location
+      });
+    })
   }
 
   _locationChanged(location) {
