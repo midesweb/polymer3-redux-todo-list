@@ -18,6 +18,7 @@ import '@polymer/paper-icon-button';
 import '@polymer/paper-styles/shadow.js';
 import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/iron-selector/iron-selector';
 
 import '@vaadin/vaadin-icons/vaadin-icons.js';
 import '@vaadin/vaadin-button/vaadin-button.js';
@@ -70,13 +71,19 @@ class ReduxDemoApp extends connect(store)(PolymerElement) {
           padding: 15px;
           @apply --shadow-elevation-2dp;
         }
+        #mainnav .iron-selected {
+          color: #69a;
+          font-weight: bold;
+          text-transform: uppercase;
+        }
       </style>
       <div class="container">
-        <nav>
-          <a href="/">TODOS</a> | 
-          <a href="/estadisticas">Estadísticas</a> | 
-          <a href="/contador">Contador</a>
-          <a href="/view2">Contador traído</a>
+        <nav id="mainnav">
+        <iron-selector selected="[[_page]]" attr-for-selected="page-name">
+          <a href="/" page-name="todo-home">Todos</a> | 
+          <a href="/estadisticas" page-name="estadisticas">Estadísticas</a> | 
+          <a href="/contador" page-name="contador">Contador</a>
+        </iron-selector>
         </nav>
         <h1>Todo list</h1>
         <iron-pages selected="[[_page]]" attr-for-selected="page-name">
@@ -176,7 +183,7 @@ class ReduxDemoApp extends connect(store)(PolymerElement) {
   }
 
   stateChanged(state) {
-    console.log('stateChanged home', state);
+    //console.log('stateChanged home', state);
     this._filter = state.todoApp.visibilityFilter
     this._todos = state.todoApp.todos.filter(this.filtradoTodos.bind(this))
     this._page = state.todoApp.navigation.page

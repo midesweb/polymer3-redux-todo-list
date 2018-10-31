@@ -32,18 +32,24 @@ class ClickCounter extends connect(store)(PolymerElement) {
 
   static get template() {
     return html`
-      <h1>[[_counter]]</h1>
+      <style>
+      h1 span {
+        font-size: 50%;
+      }
+      </style>
+      <h1>[[_counter]] <span>(en [[_clicks]] clics)</span></h1> 
       <p>
-        <vaadin-button on-click="incrementar">Incrementar</vaadin-button>
-        <vaadin-button on-click="decrementar">Decrementar</vaadin-button>
+        <vaadin-button on-click="incrementar"><iron-icon icon="add"></iron-icon> Incrementar</vaadin-button>
+        <vaadin-button on-click="decrementar"><iron-icon icon="remove"></iron-icon> Decrementar</vaadin-button>
       </p>
     `;
   }
 
 
   stateChanged(state) {
-    console.log('stateChanged click-counter', state);
+    //console.log('stateChanged click-counter', state);
     this._counter = state.counter.value;
+    this._clicks = state.counter.clicks;
   }
 
   incrementar() {
